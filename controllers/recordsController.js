@@ -12,7 +12,10 @@ async function createRecord(req, res) {
 
   try {
     const existing = await getRecordById(deterministic_id);
-    if (existing.rows.length > 0) return res.status(200).json(existing.rows[0]);
+    if (existing.rows.length > 0) return res.status(200).json({
+        message:"This record is already existed",
+        data:existing.rows[0]
+    });
 
     const result = await insertRecord({
   id: deterministic_id,               
