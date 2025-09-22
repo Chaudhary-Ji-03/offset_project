@@ -80,3 +80,23 @@ record_id (references records.deterministic_id)
 event_type (e.g., created, retired)
 
 event_timestamp (timestamp)
+
+5️⃣ How the Deterministic ID Works
+
+The deterministic ID is generated using SHA-256 hashing of the key record fields:
+
+`${project_name}-${registry}-${vintage}-${quantity}-${serial_number?}`
+
+- Same input → same deterministic ID
+
+- Different input → different ID
+
+- The id column (primary key) is set to the deterministic ID, ensuring uniqueness.
+
+Why both id and deterministic_id?
+
+- id is the primary key required by the database.
+
+- deterministic_id is used consistently in the code for lookups and event tracking.
+
+This setup guarantees the primary key is never violated, even if the same input is submitted multiple times — the controller returns the existing record instead of inserting a duplicat
