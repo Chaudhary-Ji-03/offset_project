@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS events (
   timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Optional: index on events.record_deterministic_id for faster queries
+-- index on events.record_deterministic_id for faster queries
 CREATE INDEX IF NOT EXISTS idx_events_record ON events(record_deterministic_id);

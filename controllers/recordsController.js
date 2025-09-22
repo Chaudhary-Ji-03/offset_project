@@ -1,7 +1,7 @@
 const pool = require('../db');
 const { getRecordById, insertRecord } = require('../models/recordModel');
 const { getEventsByRecordId, insertEvent } = require('../models/eventModel');
-const generateDeterministicId = require('../utils/generateDeterministicId');
+const { generateDeterministicId } = require('../utils/generateDeterministicId');
 
 async function createRecord(req, res) {
   const { project_name, registry, vintage, quantity, serial_number } = req.body;
@@ -15,13 +15,14 @@ async function createRecord(req, res) {
     if (existing.rows.length > 0) return res.status(200).json(existing.rows[0]);
 
     const result = await insertRecord({
-      id: deterministic_id,
-      project_name,
-      registry,
-      vintage,
-      quantity,
-      serial_number: serial_number || null
-    });
+  id: deterministic_id,               
+  deterministic_id,                   
+  project_name,
+  registry,
+  vintage,
+  quantity,
+  serial_number: serial_number || null
+});
 
     res.status(201).json(result.rows[0]);
   } catch (err) {

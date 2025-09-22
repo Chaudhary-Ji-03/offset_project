@@ -1,3 +1,7 @@
+Offset Backend Exercise – Ritik Kumar Choudhary
+
+Reflection Questions & Answers
+
 Q). How did you design the ID so it’s always the same for the same input?
 
 => The motive was to design the ID such that it wil remain same on giving the same input the most appropriate thing that comes in my mind is using hashing algorithm since the one thing about the hashing is depends upon the input and will create the same fix length hash on giving the same input.
@@ -15,3 +19,64 @@ Q). If two people tried to retire the same credit at the same time, what would b
 How would you fix it?
 
 => If two people tried to retire the same credit at the same time, it would give you the error like that record has already retired because it should be unique per the record_id so that would break the normal flow of the application to fix that i have created the event record in which i refrenced the user id such that each event is marked per user rather than event itself its fixes the issue of the two people trying to retire the same credit since now each user can do that seperately without breaking the application.
+
+1️⃣ Overview
+
+This project is a small REST API ledger for carbon credits. It allows:
+
+Creating carbon credit records with deterministic IDs.
+
+Tracking events (like “created” and “retired”) in an append-only log.
+
+Retrieving a record along with its full event history.
+
+Built using Node.js + Express + PostgreSQL.
+
+2️⃣ Tech Stack
+
+Backend: Node.js, Express.js
+
+Database: PostgreSQL (via pg pool)
+
+Hashing: Node.js crypto module (sha256) for deterministic IDs
+
+3️⃣ API Endpoints
+Method Endpoint Description
+POST /records Create a record
+GET /records/:id Fetch record + events
+POST /records/:id/:event Add an event (e.g., retire a record)
+Example: Create a Record
+curl -X POST http://localhost:5000/records \
+-H "Content-Type: application/json" \
+-d '{
+"project_name": "Acme Reforestation",
+"registry": "VCS",
+"vintage": 2021,
+"quantity": 10
+}'
+
+Example: Retire a Record
+curl -X POST http://localhost:5000/records/<deterministic_id>/retired
+
+Example: Get Record with Events
+curl http://localhost:5000/records/<deterministic_id>
+
+4️⃣ Database Design
+
+records table:
+
+deterministic_id (primary key, sha256 hash)
+
+project_name, registry, vintage, quantity
+
+serial_number (optional)
+
+events table:
+
+event_id (primary key)
+
+record_id (references records.deterministic_id)
+
+event_type (e.g., created, retired)
+
+event_timestamp (timestamp)
